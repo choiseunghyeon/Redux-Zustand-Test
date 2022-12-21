@@ -5,14 +5,16 @@ import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import "./index.css"
 import App2 from "./App2"
+import App3 from "./App3"
+import { store } from "./store"
 
 const container = document.getElementById("root")!
 const root = createRoot(container)
 
 root.render(
-  <React.StrictMode>
-    <App2 />
-  </React.StrictMode>
+  <Provider store={store}>
+    <App />
+  </Provider>
 )
 
 // If you want to start measuring performance in your app, pass a function

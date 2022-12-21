@@ -1,12 +1,13 @@
 import { Box, Button, Text } from "@mantine/core"
+import { useEffect, useState } from "react"
 import { useSelector, useDispatch, Provider, shallowEqual } from "react-redux"
 
-import { store, addToFirst, addToSecond, doNothing, RootState } from "./store"
+import { store, addToFirst, addToSecond, doNothing, RootState, changeFlag } from "./store"
 
 const DoNothingButton = () => {
   const dispatch = useDispatch()
   return (
-    <Button size="xl" onClick={() => dispatch(doNothing())}>
+    <Button size="xl" onClick={() => dispatch(changeFlag())}>
       Do Nothing
     </Button>
   )
@@ -41,9 +42,23 @@ const AddToSecondButton = () => {
 
 const SecondValue = () => {
   const secondNumber = useSelector((state: RootState) => state.secondNumber)
+  const [name, setName] = useState("choi")
+  useEffect(() => {
+    console.log("effect!" + secondNumber)
+    return () => {
+      console.log("clean up!" + secondNumber)
+    }
+  }, [secondNumber])
+
   return (
     <Text size="xl" p={5}>
       Second value: {secondNumber}
+      <button
+        onClick={() => {
+          setName("" + Math.random() * 100)
+        }}>
+        이름 변경
+      </button>
     </Text>
   )
 }
@@ -58,8 +73,9 @@ const NumbersValue = () => {
 }
 
 function App() {
+  const flag = useSelector((state: RootState) => state.flag)
   return (
-    <Provider store={store}>
+    <>
       <Box p={10}>
         <Box
           sx={{
@@ -81,11 +97,12 @@ function App() {
             display: "flex",
           }}>
           <AddToSecondButton />
-          <SecondValue />
+          {flag ? <SecondValue /> : <div>nope</div>}
+          {/* <SecondValue /> */}
         </Box>
       </Box>
       <NumbersValue />
-    </Provider>
+    </>
   )
 }
 
